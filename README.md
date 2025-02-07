@@ -4,11 +4,5 @@
 
 # CI
 
-Set the follwing vars and secrets in this project
-
-Vars:
+Set the follwing environment variable in this project
 GAMENAME
-
-Secrets:
-BUTLER_API_KEY
-ITCHIO_USERNAME
