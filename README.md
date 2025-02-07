@@ -1,9 +1,13 @@
 # {{ Game Name}}
 
 ![CI](https://github.com/robotnik-dev/godot-template/actions/workflows/ci.yaml/badge.svg)
+![CI](https://github.com/robotnik-dev/godot-template/actions/workflows/cd.yaml/badge.svg)
 
 # CI
-1. For the CI to run you have to push a new tag in the format
+Builds and exports the game after each push.
+
+# CD
+1. For the CD pipeline to run you have to push a new tag in the format
 
         v*.*.*
 

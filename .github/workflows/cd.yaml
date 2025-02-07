@@ -1,14 +1,17 @@
-name: "CI"
+name: "CD"
 
-on: push
+on:
+    push:
+      tags:
+        "v*.*.*"
 
 env:
   GODOT_VERSION: 4.3
   PROJECT_PATH: godot
 
 jobs:
-  export-windows:
-    name: Windows Export
+  deploy-windows:
+    name: Windows Deploy
     runs-on: ubuntu-20.04
     environment: godot
     container:
@@ -30,9 +33,14 @@ jobs:
           EXPORT_DIR="$(readlink -f build)"
           cd $PROJECT_PATH
           godot --headless --verbose --export-release "Windows Desktop" "$EXPORT_DIR/windows/${{ vars.ITCHIO_GAMENAME }}.exe"
+      - name: Deploy Itchio
+        env:
+          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+        run: |
+          butler push build/windows ${{ secrets.ITCHIO_USERNAME }}/${{ vars.ITCHIO_GAMENAME }}:windows --userversion ${{ github.ref }}
 
-  export-linux:
-    name: Linux Export
+  deploy-linux:
+    name: Linux Deploy
     runs-on: ubuntu-20.04
     environment: godot
     container:
@@ -52,9 +60,14 @@ jobs:
           EXPORT_DIR="$(readlink -f build)"
           cd $PROJECT_PATH
           godot --headless --verbose --export-release "Linux/X11" "$EXPORT_DIR/linux/${{ vars.ITCHIO_GAMENAME }}.x86_64"
+      - name: Deploy Itchio
+        env:
+          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+        run: |
+          butler push build/linux ${{ secrets.ITCHIO_USERNAME }}/${{ vars.ITCHIO_GAMENAME }}:linux --userversion ${{ github.ref }}
 
-  export-web:
-    name: Web Export
+  deploy-web:
+    name: Web Deploy
     runs-on: ubuntu-20.04
     environment: godot
     container:
@@ -74,10 +87,16 @@ jobs:
           EXPORT_DIR="$(readlink -f build)"
           cd $PROJECT_PATH
           godot --headless --verbose --export-release "Web" "$EXPORT_DIR/web/index.html"
+      - name: Deploy Itchio
+        env:
+          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+        run: |
+          butler push build/web ${{ secrets.ITCHIO_USERNAME }}/${{ vars.ITCHIO_GAMENAME }}:web --userversion ${{ github.ref }}
+
 
 # Android Debug Job. It will use the generated debug.keystore.
-  export-android-debug:
-    name: Android Debug Export
+  deploy-android-debug:
+    name: Android Debug Deploy
     runs-on: ubuntu-20.04
     environment: godot
     container:
@@ -99,25 +118,8 @@ jobs:
           EXPORT_DIR="$(readlink -f build)"
           cd $PROJECT_PATH
           godot --headless --verbose --export-debug "Android Debug" "$EXPORT_DIR/android/${{ vars.ITCHIO_GAMENAME }}-debug.apk"
-
-  # export-mac:
-  #   name: Mac Export
-  #   runs-on: ubuntu-20.04
-  #   environment: godot
-  #   container:
-  #     image: barichello/godot-ci:4.3
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
-  #       with:
-  #         lfs: true
-  #     - name: Setup
-  #       run: |
-  #         mkdir -v -p ~/.local/share/godot/export_templates/
-  #         mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
-  #     - name: Mac Build
-  #       run: |
-  #         mkdir -v -p build/mac
-  #         EXPORT_DIR="$(readlink -f build)"
-  #         cd $PROJECT_PATH
-  #         godot --headless --verbose --export-release "macOS" "$EXPORT_DIR/mac/${{ vars.ITCHIO_GAMENAME }}.zip"
+      - name: Deploy Itchio
+        env:
+          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+        run: |
+          butler push build/android ${{ secrets.ITCHIO_USERNAME }}/${{ vars.ITCHIO_GAMENAME }}:android --userversion ${{ github.ref }}
