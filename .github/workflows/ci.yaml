@@ -32,12 +32,12 @@ jobs:
           mkdir -v -p build/windows
           EXPORT_DIR="$(readlink -f build)"
           cd $PROJECT_PATH
-          godot --headless --verbose --export-release "Windows Desktop" "$EXPORT_DIR/windows/${{ vars.GAMENAME }}.exe"
+          godot --headless --verbose --export-release "Windows Desktop" "$EXPORT_DIR/windows/${{ vars.ITCHIO_GAMENAME }}.exe"
       - name: Deploy Itchio
         env:
           BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
         run: |
-          butler push build/windows ${{ secrets.ITCHIO_USERNAME }}/${{ vars.GAMENAME }}:windows --userversion ${{ github.ref }}
+          butler push build/windows ${{ secrets.ITCHIO_USERNAME }}/${{ vars.ITCHIO_GAMENAME }}:windows --userversion ${{ github.ref }}
 
   export-linux:
     name: Linux Export
@@ -59,12 +59,12 @@ jobs:
           mkdir -v -p build/linux
           EXPORT_DIR="$(readlink -f build)"
           cd $PROJECT_PATH
-          godot --headless --verbose --export-release "Linux/X11" "$EXPORT_DIR/linux/${{ vars.GAMENAME }}.x86_64"
+          godot --headless --verbose --export-release "Linux/X11" "$EXPORT_DIR/linux/${{ vars.ITCHIO_GAMENAME }}.x86_64"
       - name: Deploy Itchio
         env:
           BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
         run: |
-          butler push build/linux ${{ secrets.ITCHIO_USERNAME }}/${{ vars.GAMENAME }}:linux --userversion ${{ github.ref }}
+          butler push build/linux ${{ secrets.ITCHIO_USERNAME }}/${{ vars.ITCHIO_GAMENAME }}:linux --userversion ${{ github.ref }}
 
   export-web:
     name: Web Export
@@ -91,7 +91,7 @@ jobs:
         env:
           BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
         run: |
-          butler push build/web ${{ secrets.ITCHIO_USERNAME }}/${{ vars.GAMENAME }}:web --userversion ${{ github.ref }}
+          butler push build/web ${{ secrets.ITCHIO_USERNAME }}/${{ vars.ITCHIO_GAMENAME }}:web --userversion ${{ github.ref }}
 
 
 # Android Debug Job. It will use the generated debug.keystore.
@@ -117,12 +117,12 @@ jobs:
           mkdir -v -p build/android
           EXPORT_DIR="$(readlink -f build)"
           cd $PROJECT_PATH
-          godot --headless --verbose --export-debug "Android Debug" "$EXPORT_DIR/android/${{ vars.GAMENAME }}-debug.apk"
+          godot --headless --verbose --export-debug "Android Debug" "$EXPORT_DIR/android/${{ vars.ITCHIO_GAMENAME }}-debug.apk"
       - name: Deploy Itchio
         env:
           BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
         run: |
-          butler push build/android ${{ secrets.ITCHIO_USERNAME }}/${{ vars.GAMENAME }}:android --userversion ${{ github.ref }}
+          butler push build/android ${{ secrets.ITCHIO_USERNAME }}/${{ vars.ITCHIO_GAMENAME }}:android --userversion ${{ github.ref }}
 
   # export-mac:
   #   name: Mac Export
@@ -144,9 +144,9 @@ jobs:
   #         mkdir -v -p build/mac
   #         EXPORT_DIR="$(readlink -f build)"
   #         cd $PROJECT_PATH
-  #         godot --headless --verbose --export-release "macOS" "$EXPORT_DIR/mac/${{ vars.GAMENAME }}.zip"
+  #         godot --headless --verbose --export-release "macOS" "$EXPORT_DIR/mac/${{ vars.ITCHIO_GAMENAME }}.zip"
   #     - name: Deploy Itchio
   #       env:
   #         BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
   #       run: |
-  #         butler push build/mac ${{ secrets.ITCHIO_USERNAME }}/${{ vars.GAMENAME }}:mac --userversion ${{ github.ref }}
+  #         butler push build/mac ${{ secrets.ITCHIO_USERNAME }}/${{ vars.ITCHIO_GAMENAME }}:mac --userversion ${{ github.ref }}
