@@ -1,6 +1,9 @@
 name: "CI"
 
-on: push
+on:
+  push:
+    tags-ignore:
+      "v*.*.*"
 
 env:
   GODOT_VERSION: 4.3
